@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#090909">
+  <meta name="description" content="Moonflix Player API reference and interactive movie and TV playback tester.">
+  <title>API Studio — Moonflix</title>
+  <link rel="icon" href="https://www.moonflix.website/lovable-uploads/Moonflix.png" type="image/png">
+  <link rel="stylesheet" href="/api-docs.css">
+  <script defer src="/api-docs.js"></script>
+</head>
+<body>
+  <div class="page-shell">
+    <header class="topbar">
+      <a class="brand" href="/" aria-label="Moonflix home"><span class="brand-mark">M</span><span>MOONFLIX</span></a>
+      <nav class="topnav" aria-label="Main navigation">
+        <a href="#playground">Playground</a>
+        <a href="#reference">API reference</a>
+      </nav>
+      <a class="back-link" href="/">Back to player <span aria-hidden="true">↗</span></a>
+    </header>
+
+    <main>
+      <section class="hero">
+        <div class="eyebrow"><span class="live-dot"></span> DEVELOPER STUDIO <span class="eyebrow-divider">/</span> V1</div>
+        <h1>Playback, <span>at your command.</span></h1>
+        <p>Explore the player routes, test any TMDB movie or episode, and preview the experience right here.</p>
+        <div class="hero-meta"><span>PLAYER API</span><i></i><span>INTERACTIVE SANDBOX</span><i></i><span>JSON REFERENCE</span></div>
+      </section>
+
+      <section id="playground" class="playground section-card">
+        <div class="section-heading">
+          <div>
+            <div class="section-kicker">01 <span>·</span> PLAYGROUND</div>
+            <h2>Launch a title</h2>
+            <p>Enter a TMDB ID to load a title in the embedded player.</p>
+          </div>
+          <div class="secure-badge"><span></span> LIVE PLAYER</div>
+        </div>
+
+        <form id="player-form" class="player-form">
+          <label class="field">
+            <span>CONTENT TYPE</span>
+            <select id="media-type" name="type">
+              <option value="movie">Movie</option>
+              <option value="tv">TV series</option>
+            </select>
+          </label>
+          <label class="field id-field">
+            <span>TMDB ID</span>
+            <input id="tmdb-id" name="id" type="text" inputmode="numeric" pattern="[0-9]+" placeholder="e.g. 550" autocomplete="off" required>
+          </label>
+          <div id="episode-fields" class="episode-fields" hidden>
+            <label class="field">
+              <span>SEASON</span>
+              <input id="season" name="season" type="number" min="1" step="1" value="1">
+            </label>
+            <label class="field">
+              <span>EPISODE</span>
+              <input id="episode" name="episode" type="number" min="1" step="1" value="1">
+            </label>
+          </div>
+          <button class="launch-button" type="submit"><span>Launch player</span><span aria-hidden="true">→</span></button>
+        </form>
+
+        <div class="request-preview">
+          <div><span class="request-label">PLAYER ROUTE</span><code id="route-preview">/movie/{tmdbId}</code></div>
+          <span id="form-status" role="status" aria-live="polite">Ready when you are</span>
+        </div>
+
+        <div class="preview-frame">
+          <div id="player-placeholder" class="player-placeholder">
+            <div class="placeholder-icon"><span></span></div>
+            <strong>Your preview starts here</strong>
+            <p>Choose a movie or series above, then launch the player.</p>
+          </div>
+          <iframe id="player-frame" title="Moonflix test player" allow="autoplay; fullscreen; picture-in-picture; encrypted-media" allowfullscreen></iframe>
+        </div>
+        <p class="frame-note"><span class="note-icon">i</span> Playback availability depends on the selected title and active stream providers.</p>
+      </section>
+
+      <section id="reference" class="reference-section">
+        <div class="section-heading reference-heading">
+          <div>
+            <div class="section-kicker">02 <span>·</span> REFERENCE</div>
+            <h2>Routes &amp; endpoints</h2>
+            <p>Use these routes with your deployed Moonflix Player base URL.</p>
+          </div>
+          <div class="base-url"><span>BASE URL</span><code id="base-url"></code></div>
+        </div>
+
+        <div class="endpoint-grid">
+          <article class="endpoint-card">
+            <div class="endpoint-top"><span class="method">PLAYER</span><span class="endpoint-tag">MOVIE</span></div>
+            <code class="endpoint-path">/movie/{tmdbId}</code>
+            <p>Opens a movie using its TMDB numeric ID.</p>
+            <div class="endpoint-example"><span>EXAMPLE</span><code>/movie/550</code></div>
+          </article>
+          <article class="endpoint-card">
+            <div class="endpoint-top"><span class="method">PLAYER</span><span class="endpoint-tag">SERIES</span></div>
+            <code class="endpoint-path">/tv/{tmdbId}/S{season}/E{episode}</code>
+            <p>Opens a specific series episode. Season and episode numbers start at 1.</p>
+            <div class="endpoint-example"><span>EXAMPLE</span><code>/tv/1399/S1/E1</code></div>
+          </article>
+          <article class="endpoint-card">
+            <div class="endpoint-top"><span class="method get">GET</span><span class="endpoint-tag">HEALTH</span></div>
+            <code class="endpoint-path">/health</code>
+            <p>Readiness endpoint for deployment checks.</p>
+            <div class="endpoint-example"><span>RESPONSE</span><code>{"ok":true,"service":"vidout-player-server"}</code></div>
+          </article>
+        </div>
+      </section>
+    </main>
+    <footer><span class="brand-mark small">M</span><span>MOONFLIX PLAYER</span><span class="footer-divider">·</span><span>API STUDIO</span><span class="footer-version">DESIGNED FOR THE BIG SCREEN</span></footer>
+  </div>
+</body>
+</html>

@@ -1,8 +1,9 @@
-﻿/* -------------------------------------------------------------------------
+/* -------------------------------------------------------------------------
    UI HELPERS
    ------------------------------------------------------------------------- */
 function displayError(msg) {
     const detail = String(msg || 'Unknown playback error.');
+    window.playerActivity?.(`Playback failed: ${detail}`, 'error');
     console.error('[Player error]', detail, { url: resolvedUrl, path: window.location.pathname });
     const title = document.getElementById('error-title');
     const detailEl = document.getElementById('error-detail');
@@ -25,6 +26,7 @@ document.getElementById('error-retry')?.addEventListener('click', () => {
     else resolveAndPlay();
 });
 function showLoader() {
+    window.playerActivity?.('Preparing playback…');
     loadingIndicator.classList.remove('hidden');
     centerPlayPauseOverlay.classList.remove('opacity-100','pointer-events-auto');
     centerPlayPauseOverlay.classList.add('opacity-0','pointer-events-none');
@@ -1108,4 +1110,3 @@ function handleKeyboardShortcuts(e) {
     }
 }
 document.addEventListener('keydown', handleKeyboardShortcuts);
-

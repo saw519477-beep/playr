@@ -6,6 +6,7 @@ import { fileURLToPath } from 'node:url';
 const rootDir = resolve(fileURLToPath(new URL('.', import.meta.url)));
 const sourceDir = join(rootDir, 'src');
 const playerFile = join(sourceDir, 'index.html');
+const apiDocsFile = join(sourceDir, 'api-docs.html');
 const tmdbApiKey = readTmdbApiKey();
 const port = Number(process.env.PORT || 4000);
 const proxyPath = '/proxy/stream';
@@ -234,6 +235,10 @@ const server = createServer((req, res) => {
   if (req.method === 'GET' && requestUrl.pathname === '/health') {
     send(res, 200, JSON.stringify({ ok: true, service: 'vidout-player-server' }), 'application/json; charset=utf-8');
     return;
+  }
+
+  if ((req.method === 'GET' || req.method === 'HEAD') && requestUrl.pathname === '/api') {
+    if (serveFile(res, apiDocsFile)) return;
   }
 
   if (requestUrl.pathname === proxyPath && req.method === 'OPTIONS') {

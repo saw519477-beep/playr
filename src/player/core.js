@@ -1,9 +1,47 @@
-﻿/* -------------------------------------------------------------------------
+/* -------------------------------------------------------------------------
    DOM ELEMENTS
    ------------------------------------------------------------------------- */
 const video                = document.getElementById('video');
 const videoContainer       = document.getElementById('video-container');
 const errorMessageDiv      = document.getElementById('error-message');
+
+const playerActivityPanel = document.createElement('section');
+playerActivityPanel.className = 'player-activity';
+playerActivityPanel.setAttribute('aria-label', 'Player activity');
+playerActivityPanel.innerHTML = '<button class="player-activity-toggle" type="button" aria-expanded="false"><span class="player-activity-indicator"></span><span class="player-activity-title">PLAYER STATUS</span><span class="player-activity-latest">Waiting for playback</span><span class="player-activity-chevron" aria-hidden="true">⌄</span></button><div class="player-activity-details" hidden><div class="player-activity-heading"><span>SESSION ACTIVITY</span><span class="player-activity-live"><i></i> LIVE</span></div><ol class="player-activity-list" aria-live="polite"></ol></div>';
+videoContainer.appendChild(playerActivityPanel);
+const playerActivityToggle = playerActivityPanel.querySelector('.player-activity-toggle');
+const playerActivityLatest = playerActivityPanel.querySelector('.player-activity-latest');
+const playerActivityDetails = playerActivityPanel.querySelector('.player-activity-details');
+const playerActivityList = playerActivityPanel.querySelector('.player-activity-list');
+let playerActivityHideTimer = null;
+
+playerActivityToggle.addEventListener('click', () => {
+    const expanded = playerActivityToggle.getAttribute('aria-expanded') === 'true';
+    playerActivityToggle.setAttribute('aria-expanded', String(!expanded));
+    playerActivityDetails.hidden = expanded;
+});
+
+window.playerActivity = (message, level = 'info') => {
+    const timestamp = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit' });
+    const entry = document.createElement('li');
+    entry.className = `player-activity-entry ${level}`;
+    const time = document.createElement('time');
+    time.textContent = timestamp;
+    const text = document.createElement('span');
+    text.textContent = String(message);
+    entry.append(time, text);
+    playerActivityList.prepend(entry);
+    while (playerActivityList.children.length > 8) playerActivityList.lastElementChild.remove();
+
+    playerActivityLatest.textContent = String(message);
+    playerActivityPanel.dataset.level = level;
+    playerActivityPanel.classList.add('visible');
+    clearTimeout(playerActivityHideTimer);
+    if (level !== 'error' && playerActivityToggle.getAttribute('aria-expanded') !== 'true') {
+        playerActivityHideTimer = setTimeout(() => playerActivityPanel.classList.remove('visible'), 9000);
+    }
+};
 
 const topOverlay           = document.getElementById('top-overlay');
 const bottomOverlay        = document.getElementById('bottom-overlay');
@@ -601,4 +639,3 @@ function getFullLanguageName(code) {
     const lc = code.toLowerCase();
     return languageCodeMap[lc] || code.charAt(0).toUpperCase() + code.slice(1);
 }
-
